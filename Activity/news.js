@@ -111,19 +111,26 @@ function writeInFile(news,pathofFile)
     }
 }
 
-let dialog;
+
+let dialogArr = [];
 setTimeout(function () {
 
-    let arr = require("./NewsToday/automobile.json")
+    let arr = require("./NewsToday/national.json")
 
     let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
 
     let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
 
     console.log(stringToJsonObject);
-    dialog = stringToJsonObject[0][5];
-    console.log(dialog);
+    console.log(typeof(stringToJsonObject));
+    let sizeOfObj = Object.size(stringToJsonObject);
+    console.log(sizeOfObj);
+    for(let i = 0; i < 20; i++)
+    {   //just a try
+        dialogArr.push(stringToJsonObject[sizeOfObj - 1][i]);
+    }
 }, 12000);  //intentionally slowed by 12 seconds
+
 
 
 (async function()
@@ -131,7 +138,7 @@ setTimeout(function () {
     try
     {
         let browserInstancePromise = await puppeteer.launch({
-            headless :false,
+            headless :true,
             defaultViewport:null,
             args: ['--start-maximized'] 
         });
@@ -153,8 +160,14 @@ setTimeout(function () {
             ele2.click();
         }
 
-        await newPage.evaluate(browserConsoleFn,dialog);
-        console.log("worked!!!!")
+        await newPage.evaluate(browserConsoleFn,"today's news are...............");
+        
+        for(let i = 0; i < 20; i++)
+        {
+            await newPage.evaluate(browserConsoleFn,i+1+"....."+dialogArr[i]);
+        }
+
+        console.log("Listen !!!");
 
     }
     catch(error)
@@ -164,12 +177,13 @@ setTimeout(function () {
 })()
 
 
-async function waitAndClick(selector, newPage) {
-    await newPage.waitForSelector(selector, { visible: true });
-
-    let selectorClickPromise = newPage.click(selector);
-
-    return selectorClickPromise;
-}
+Object.size = function(obj) {
+    var size = 0,
+      key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
 
 
