@@ -111,33 +111,19 @@ function writeInFile(news,pathofFile)
     }
 }
 
-//======================this piece of code is used to convert array to json object=====================
+let dialog;
+setTimeout(function () {
 
+    let arr = require("./NewsToday/automobile.json")
 
-// setTimeout(function () {
+    let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
 
-//     let arr = require("./NewsToday/automobile.json")
+    let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
 
-//     let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
-
-//     let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
-
-//     console.log(stringToJsonObject);
-//     let newsLine = stringToJsonObject[0][5];
-//     console.log(newsLine);
-// }, 15000);  //intentionally slowed by 15 seconds
-// let arr = require("./NewsToday/automobile.json")
-
-// let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
-
-// let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
-
-// console.log(stringToJsonObject);
-// let newsLine = stringToJsonObject[0][5];
-// console.log(newsLine);
-////==========================array to json ends here===================================================
-
-
+    console.log(stringToJsonObject);
+    dialog = stringToJsonObject[0][5];
+    console.log(dialog);
+}, 12000);  //intentionally slowed by 12 seconds
 
 
 (async function()
@@ -152,30 +138,23 @@ function writeInFile(news,pathofFile)
 
         let newPage = await browserInstancePromise.newPage();
 
-        await newPage.goto("https://codepen.io/pen/");
+        await newPage.goto("http://127.0.0.1:5500/hackathon/Raw/poc/textToSpeech.html");
 
-        await newPage.click(".box.box-html .CodeMirror-lines");
 
-        await newPage.type(".box.box-html .CodeMirror-lines",textToSpeechCode.Code);
+        await newPage.click("#text123");
 
-        setTimeout(()=>{return; },6000);
+        await newPage.type("#text123",textToSpeechCode.Code,{delay:10});
 
-        function browserConsoleFn()
+        function browserConsoleFn(dialog)
         {
             let ele = document.querySelector("input[type='text']");
-            ele.value  = "Harshit Sharma";
+            ele.value  = dialog;
             let ele2 = document.querySelector("button[onclick='textToAudio()']");
-            console.log(ele2.innerText);
             ele2.click();
         }
 
-        await newPage.evaluate(browserConsoleFn);
-
-        // await waitAndClick("input[id='text-to-speech']",newPage);
-
-        // await newPage.type("input[id='text-to-speech']","harshit");
-
-        // await newPage.click("button[onclick='textToAudio()']");
+        await newPage.evaluate(browserConsoleFn,dialog);
+        console.log("worked!!!!")
 
     }
     catch(error)
@@ -193,11 +172,4 @@ async function waitAndClick(selector, newPage) {
     return selectorClickPromise;
 }
 
-// console.log(textToSpeechCode.Code);  //jsut loged to check that it is working or not
-
-//====================run in console of browser=======
-// let ele = document.querySelector("input[type='text']");
-// ele.value = "Harshit Sharma";
-// let ele2 = document.querySelector("button[onclick='textToAudio()']");
-// ele2.click();
 

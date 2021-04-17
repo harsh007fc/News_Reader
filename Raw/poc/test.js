@@ -113,18 +113,22 @@ function writeInFile(news,pathofFile)
 
 //======================this piece of code is used to convert array to json object=====================
 
-let dialog;
+let dialog = [];
 setTimeout(function () {
 
-    let arr = require("./NewsToday/automobile.json")
+    let arr = require("./NewsToday/national.json")
 
     let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
 
     let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
 
-    console.log(stringToJsonObject);
-    dialog = stringToJsonObject[0][5];
-    console.log(dialog);
+    // console.log(stringToJsonObject);
+    for(let i = 0; i < 20; i++)
+    {
+        dialog.push(stringToJsonObject[0][i]);
+    }
+    // dialog = stringToJsonObject[0][5];
+    // console.log(dialog);
 }, 12000);  //intentionally slowed by 12 seconds
 // let arr = require("./NewsToday/automobile.json")
 
@@ -167,9 +171,11 @@ setTimeout(function () {
             ele2.click();
         }
 
-        await newPage.evaluate(browserConsoleFn,dialog);
-        console.log("chl pda")
-
+        for(let i = 0; i < 20; i++)
+        {
+            await newPage.evaluate(browserConsoleFn,dialog[i]);
+        }
+        console.log("Listen !!!");
 
 
         // await newPage.click(".box.box-html .CodeMirror-lines");
