@@ -149,7 +149,7 @@ setTimeout(function () {
     try
     {
         let browserInstancePromise = await puppeteer.launch({
-            headless :false,
+            headless :true,
             defaultViewport:null,
             args: ['--start-maximized'] 
         });
@@ -171,11 +171,16 @@ setTimeout(function () {
             ele2.click();
         }
 
+        await newPage.evaluate(browserConsoleFn,"today's news are...............");
+        
         for(let i = 0; i < 20; i++)
         {
-            await newPage.evaluate(browserConsoleFn,dialog[i]);
+            await newPage.evaluate(browserConsoleFn,i+1+"....."+dialog[i]);
         }
+
         console.log("Listen !!!");
+
+        // await browserInstancePromise.close();
 
 
         // await newPage.click(".box.box-html .CodeMirror-lines");
