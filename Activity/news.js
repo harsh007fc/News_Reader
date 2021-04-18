@@ -17,6 +17,8 @@
 ///********* For Input run this file on integrated terminal and then type input as given below(square braces excluded):-
 // [node fileName.js topicName]
 // and also read line number 170 of this code before running it on your system
+//***********when you hear a beep sound you have to scan a QR code from your whatsapp mobile to open whatsapp web in chromium browser******************** 
+//******************************* To open QR code scanner into your mobile goto whatsapp->click on three dots on top right corner-> tap on whatsapp web -> tap on green button i.e. (Link a Device)
 
 
 let request = require("request");
@@ -148,7 +150,7 @@ setTimeout(function () {
     let sizeOfObj = Object.size(stringToJsonObject);
 
     for(let i = 0; i < 20; i++)
-    {   //just a try
+    { 
         dialogArr.push(stringToJsonObject[sizeOfObj - 1][i]);
     }
 }, 12000);  //intentionally slowed by 12 seconds 
@@ -174,7 +176,7 @@ setTimeout(function () {
 
         await newPage.type("#text123",textToSpeechCode.Code,{delay:10});
 
-        function browserConsoleFn(dialog)
+        function browserConsoleFn(dialog) //function to be run on hidden browser console
         {
             let ele = document.querySelector("input[type='text']");
             ele.value  = dialog;
@@ -199,21 +201,18 @@ setTimeout(function () {
         });
 
 
-        //this is for beep to scan qr for whats app
+        //this is for a beep reminds us to scan QR for whatsapp
         let thirdPage = await secondBrowserInstancePromise.newPage();
         await thirdPage.goto("https://odino.org/emit-a-beeping-sound-with-javascript/");
         await thirdPage.click("button[onclick='beep(999, 210, 800); beep(999, 500, 800);']");
-
 
             
         let secondNewPage = await secondBrowserInstancePromise.newPage();
             
         await secondNewPage.goto("https://web.whatsapp.com/");
 
-        console.log("*****Scan Qr code to open whats app*****");
+        console.log("*****Scan Qr code to open whatsapp*****");
 
-
-        
 
         await waitAndClick("div[data-tab='3']",secondNewPage);
 
@@ -258,7 +257,7 @@ Object.size = function (obj) {
     return size;
 };
 
-
+//this function is used for selectors waiting
 async function waitAndClick(selector, Page) {
 
     await Page.waitForSelector(selector, { visible: true });
