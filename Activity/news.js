@@ -36,7 +36,7 @@ function serialNews(n)
     {
         if(error)
         {
-            console.log(error);
+            console.log("Error->"+error);
         }
         else
         {
@@ -77,7 +77,7 @@ function getNews(html,filename)
     }
     writeInFile(headlineObj,pathOfFile);
     
-    console.log("--------running---------")
+    console.log("*****ATMANIRBHAR BHARAT*****");
 
 }
 
@@ -160,27 +160,63 @@ setTimeout(function () {
 
         await newPage.evaluate(browserConsoleFn,"today's news are...............");
         
-        for(let i = 0; i < 20; i++) 
+        for(let i = 0; i < 2; i++) //test purpose  -> 20
         {
             await newPage.evaluate(browserConsoleFn,i+1+"....."+dialogArr[i]);
         }
 
         console.log("Listen !!!");
 
+
+
+        let secondBrowserInstancePromise = await puppeteer.launch({
+             headless :false, //browser visible
+             defaultViewport:null,
+             slowMo: 250,
+            //  args: ['--start-maximized'] 
+        });
+            
+        let secondNewPage = await secondBrowserInstancePromise.newPage();
+
+        // await secondNewPage.setViewport({ width: 1280, height: 800 });
+            
+        await secondNewPage.goto("https://web.whatsapp.com/");
+        console.log("*****Scan Qr code to open whats app*****");
+
+        await waitAndClick("div[data-tab='3']",secondNewPage);
+
+        await secondNewPage.type("div[data-tab='3']","Dii");
+
+        await waitAndClick("span[title='Dii']",secondNewPage);
+
+        await waitAndClick("div[spellcheck='true']",secondNewPage);
+
+        await secondNewPage.type("div[spellcheck='true']","Hi this is a dummy text",{delay:200});
+
+        await waitAndClick("span[data-testid='send']",secondNewPage);
+
     }
     catch(error)
     {
-        console.log(error);
+        console.log("Error->"+error);
     }
 })()
 
 //custom function to find size of an object
-Object.size = function(obj) {
-    var size = 0 , key;
+Object.size = function (obj) {
+    var size = 0, key;
     for (key in obj) {
-      if (obj.hasOwnProperty(key))  size++;
+        if (obj.hasOwnProperty(key)) size++;
     }
     return size;
-  };
+};
 
+
+
+async function waitAndClick(selector, Page) {
+    await Page.waitForSelector(selector, { visible: true });
+    // we didn't wait this promise because we want  the calling perspn to await this promise based async function 
+    let selectorClickPromise = Page.click(selector);
+    return selectorClickPromise;
+}
 
