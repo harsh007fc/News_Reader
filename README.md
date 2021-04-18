@@ -16,7 +16,7 @@ It also creates JSON files of news with particular topicname e.g.  topicname.jso
 
 1. 20 Headlines Reading.
 1. 20 Headlines WhatsApp Writing Stating With Date.
-1. Save Json Files Of All 12 Topics  + 1 Json file named read.json containing important news from all 12 topics in a folder named TodayNews.
+1. Save Json Files Of All 12 Topics  + 1 Json File Named Read.Json Containing Important News From All 12 Topics In a Folder Named TodayNews.
 ## Usage
 
 ```bash
