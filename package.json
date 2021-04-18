@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "beep": "0.0.0",
+    "beepbeep": "^1.3.0",
     "cheerio": "^1.0.0-rc.6",
     "puppeteer": "^8.0.0",
     "request": "^2.88.2"

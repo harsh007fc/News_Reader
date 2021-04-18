@@ -10,6 +10,8 @@ let puppeteer = require("puppeteer");
 
 let textToSpeechCode = require("./code");
 
+let newsTopic = process.argv[2];
+
 //mainWebsite url from which news were fetched
 let url = "https://inshorts.com";
 
@@ -78,6 +80,7 @@ function getNews(html,filename)
     writeInFile(headlineObj,pathOfFile);
     
     console.log("*****ATMANIRBHAR BHARAT*****");
+    console.log("*****RUNNING SCRIPT*****");
 
 }
 
@@ -115,7 +118,7 @@ function writeInFile(news,pathofFile)
 let dialogArr = [];
 setTimeout(function () {
 
-    let arr = require("./NewsToday/national.json")
+    let arr = require("./NewsToday/"+newsTopic+".json")
 
     let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
 
@@ -160,7 +163,7 @@ setTimeout(function () {
 
         await newPage.evaluate(browserConsoleFn,"today's news are...............");
         
-        for(let i = 0; i < 2; i++) //test purpose  -> 20
+        for(let i = 0; i < 20; i++) //test purpose  -> 20
         {
             await newPage.evaluate(browserConsoleFn,i+1+"....."+dialogArr[i]);
         }
@@ -168,32 +171,44 @@ setTimeout(function () {
         console.log("Listen !!!");
 
 
-
         let secondBrowserInstancePromise = await puppeteer.launch({
              headless :false, //browser visible
              defaultViewport:null,
-             slowMo: 250,
             //  args: ['--start-maximized'] 
         });
+
+
+        //this is for beep to scan qr for whats app
+        let thirdPage = await secondBrowserInstancePromise.newPage();
+        await thirdPage.goto("https://odino.org/emit-a-beeping-sound-with-javascript/");
+        await thirdPage.click("button[onclick='beep(999, 210, 800); beep(999, 500, 800);']");
+
+
             
         let secondNewPage = await secondBrowserInstancePromise.newPage();
-
-        // await secondNewPage.setViewport({ width: 1280, height: 800 });
             
         await secondNewPage.goto("https://web.whatsapp.com/");
+
         console.log("*****Scan Qr code to open whats app*****");
+
+
+        
 
         await waitAndClick("div[data-tab='3']",secondNewPage);
 
-        await secondNewPage.type("div[data-tab='3']","Dii");
+        await secondNewPage.type("div[data-tab='3']","News");
 
-        await waitAndClick("span[title='Dii']",secondNewPage);
+        await waitAndClick("span[title='News']",secondNewPage);
 
         await waitAndClick("div[spellcheck='true']",secondNewPage);
 
-        await secondNewPage.type("div[spellcheck='true']","Hi this is a dummy text",{delay:200});
 
-        await waitAndClick("span[data-testid='send']",secondNewPage);
+        for(let i = 0; i < 20; i++)
+        {
+           await secondNewPage.type("div[spellcheck='true']",dialogArr[i],{delay:100});
+
+           await waitAndClick("span[data-testid='send']",secondNewPage);
+        }
 
     }
     catch(error)
@@ -204,8 +219,11 @@ setTimeout(function () {
 
 //custom function to find size of an object
 Object.size = function (obj) {
+
     var size = 0, key;
+
     for (key in obj) {
+
         if (obj.hasOwnProperty(key)) size++;
     }
     return size;
@@ -214,9 +232,11 @@ Object.size = function (obj) {
 
 
 async function waitAndClick(selector, Page) {
+
     await Page.waitForSelector(selector, { visible: true });
-    // we didn't wait this promise because we want  the calling perspn to await this promise based async function 
+
     let selectorClickPromise = Page.click(selector);
+
     return selectorClickPromise;
 }
 
