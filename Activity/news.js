@@ -1,3 +1,24 @@
+//***********************This script can only show news on specific topic**************************
+//Those topics are as follows :-
+//  1 ---> national
+//  2 ---> business
+//  3 ---> sports
+//  4 ---> world
+//  5 ---> politics
+//  6 ---> technology
+//  7 ---> startup
+//  8 ---> entertainment
+//  9 ---> miscellaneous
+//  10 ---> hatke
+//  11 ---> science
+//  12 ---> automobile
+//  13 ---> read
+
+///********* For Input run this file on integrated terminal and then type input as given below(square braces excluded):-
+// [node fileName.js topicName]
+// and also read line number 170 of this code before running it on your system
+
+
 let request = require("request");
 
 let cheerio = require("cheerio");
@@ -115,7 +136,7 @@ function writeInFile(news,pathofFile)
 }
 
 
-let dialogArr = [];
+let dialogArr = []; //array from which news will be read and written
 setTimeout(function () {
 
     let arr = require("./NewsToday/"+newsTopic+".json")
@@ -146,7 +167,7 @@ setTimeout(function () {
 
         let newPage = await browserInstancePromise.newPage();
 
-        await newPage.goto("http://127.0.0.1:5500/hackathon/Raw/poc/textToSpeech.html");
+        await newPage.goto("http://127.0.0.1:5500/hackathon/Activity/textToSpeech.html"); //this is the url of running textToSpeech.html which is in current directory so before runnning this code please run textToSpeech.html and then copy the url of that page in above line of code
 
 
         await newPage.click("#text123");
@@ -174,7 +195,7 @@ setTimeout(function () {
         let secondBrowserInstancePromise = await puppeteer.launch({
              headless :false, //browser visible
              defaultViewport:null,
-            //  args: ['--start-maximized'] 
+             args: ['--start-maximized'] 
         });
 
 
@@ -203,13 +224,21 @@ setTimeout(function () {
         await waitAndClick("div[spellcheck='true']",secondNewPage);
 
 
+        await secondNewPage.type("div[spellcheck='true']","     "+"*"+today+"*"+"     ",{delay:10});
+
+        await waitAndClick("span[data-testid='send']",secondNewPage);
+
         for(let i = 0; i < 20; i++)
         {
-           await secondNewPage.type("div[spellcheck='true']",dialogArr[i],{delay:100});
+           await secondNewPage.type("div[spellcheck='true']",dialogArr[i],{delay:10});
 
            await waitAndClick("span[data-testid='send']",secondNewPage);
         }
 
+
+        await secondNewPage.type("div[spellcheck='true']","._________________________________________.",{delay:10});
+
+        await waitAndClick("span[data-testid='send']",secondNewPage);
     }
     catch(error)
     {
@@ -230,7 +259,6 @@ Object.size = function (obj) {
 };
 
 
-
 async function waitAndClick(selector, Page) {
 
     await Page.waitForSelector(selector, { visible: true });
@@ -240,3 +268,13 @@ async function waitAndClick(selector, Page) {
     return selectorClickPromise;
 }
 
+//code to get only today's date
+var today = new Date();
+
+var dd = String(today.getDate()).padStart(2, '0');
+
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+
+var yyyy = today.getFullYear();
+
+today = mm + '/' + dd + '/' + yyyy;
