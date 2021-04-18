@@ -111,9 +111,8 @@ function writeInFile(news,pathofFile)
     }
 }
 
-//======================this piece of code is used to convert array to json object=====================
 
-let dialog = [];
+let dialogArr = [];
 setTimeout(function () {
 
     let arr = require("./NewsToday/national.json")
@@ -122,25 +121,15 @@ setTimeout(function () {
 
     let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
 
-    // console.log(stringToJsonObject);
+    console.log(stringToJsonObject);
+    console.log(typeof(stringToJsonObject));
+    let sizeOfObj = Object.size(stringToJsonObject);
+    console.log(sizeOfObj);
     for(let i = 0; i < 20; i++)
-    {
-        dialog.push(stringToJsonObject[0][i]);
+    {   //just a try
+        dialogArr.push(stringToJsonObject[sizeOfObj - 1][i]);
     }
-    // dialog = stringToJsonObject[0][5];
-    // console.log(dialog);
 }, 12000);  //intentionally slowed by 12 seconds
-// let arr = require("./NewsToday/automobile.json")
-
-// let arrayToString = JSON.stringify(Object.assign({}, arr));  // convert array to string
-
-// let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
-
-// console.log(stringToJsonObject);
-// dialog = stringToJsonObject[0][5];
-// console.log(dialog);
-////==========================array to json ends here===================================================
-
 
 
 
@@ -175,37 +164,10 @@ setTimeout(function () {
         
         for(let i = 0; i < 20; i++)
         {
-            await newPage.evaluate(browserConsoleFn,i+1+"....."+dialog[i]);
+            await newPage.evaluate(browserConsoleFn,i+1+"....."+dialogArr[i]);
         }
 
         console.log("Listen !!!");
-
-        // await browserInstancePromise.close();
-
-
-        // await newPage.click(".box.box-html .CodeMirror-lines");
-
-        // await newPage.type(".box.box-html .CodeMirror-lines",textToSpeechCode.Code);
-
-        // setTimeout(()=>{return; },6000);
-
-        // function browserConsoleFn()
-        // {
-        //     clear();
-        //     let ele = document.querySelector("input[type='text']");
-        //     ele.value  = "Harshit Sharma";
-        //     let ele2 = document.querySelector("button[onclick='textToAudio()']");
-        //     console.log(ele2.innerText);
-        //     ele2.click();
-        // }
-
-        // await newPage.evaluate(browserConsoleFn);
-
-        // await waitAndClick("input[id='text-to-speech']",newPage);
-
-        // await newPage.type("input[id='text-to-speech']","harshit");
-
-        // await newPage.click("button[onclick='textToAudio()']");
 
     }
     catch(error)
@@ -215,19 +177,13 @@ setTimeout(function () {
 })()
 
 
-async function waitAndClick(selector, newPage) {
-    await newPage.waitForSelector(selector, { visible: true });
+Object.size = function(obj) {
+    var size = 0,
+      key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
 
-    let selectorClickPromise = newPage.click(selector);
-
-    return selectorClickPromise;
-}
-
-// console.log(textToSpeechCode.Code);  //jsut loged to check that it is working or not
-
-//====================run in console of browser=======
-// let ele = document.querySelector("input[type='text']");
-// ele.value = "Harshit Sharma";
-// let ele2 = document.querySelector("button[onclick='textToAudio()']");
-// ele2.click();
 

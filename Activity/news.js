@@ -53,29 +53,29 @@ function getNews(html,filename)
 
     let newsArr = selectorTool("span[itemprop='headline']");
 
-    // make folder of today's news
+    // make folder of todaynews
     makeFolderOfNews();
 
     //make file of particular topic
     let pathOfFile = path.join(__dirname,"NewsToday",filename+".json");
 
 
-    let arr = [];
+    let headlineArr = [];
 
     for(let i = 0; i < newsArr.length; i++)
     {
         let singlenews = selectorTool(newsArr[i]).text();
 
-        arr.push(singlenews+"..........");
+        headlineArr.push(singlenews+"..........");
         
     }
-    let obj = {};
+    let headlineObj = {};
 
-    for(let i = 0; i < arr.length; i++)
+    for(let i = 0; i < headlineArr.length; i++)
     {
-        obj[i] = arr[i];
+        headlineObj[i] = headlineArr[i];
     }
-    writeInFile(obj,pathOfFile);
+    writeInFile(headlineObj,pathOfFile);
     
     console.log("--------running---------")
 
@@ -121,15 +121,13 @@ setTimeout(function () {
 
     let stringToJsonObject = JSON.parse(arrayToString);  // convert string to json object
 
-    console.log(stringToJsonObject);
-    console.log(typeof(stringToJsonObject));
     let sizeOfObj = Object.size(stringToJsonObject);
-    console.log(sizeOfObj);
+
     for(let i = 0; i < 20; i++)
     {   //just a try
         dialogArr.push(stringToJsonObject[sizeOfObj - 1][i]);
     }
-}, 12000);  //intentionally slowed by 12 seconds
+}, 12000);  //intentionally slowed by 12 seconds 
 
 
 
@@ -138,7 +136,7 @@ setTimeout(function () {
     try
     {
         let browserInstancePromise = await puppeteer.launch({
-            headless :true,
+            headless :true, //browser invisible
             defaultViewport:null,
             args: ['--start-maximized'] 
         });
@@ -162,7 +160,7 @@ setTimeout(function () {
 
         await newPage.evaluate(browserConsoleFn,"today's news are...............");
         
-        for(let i = 0; i < 20; i++)
+        for(let i = 0; i < 20; i++) 
         {
             await newPage.evaluate(browserConsoleFn,i+1+"....."+dialogArr[i]);
         }
@@ -176,12 +174,11 @@ setTimeout(function () {
     }
 })()
 
-
+//custom function to find size of an object
 Object.size = function(obj) {
-    var size = 0,
-      key;
+    var size = 0 , key;
     for (key in obj) {
-      if (obj.hasOwnProperty(key)) size++;
+      if (obj.hasOwnProperty(key))  size++;
     }
     return size;
   };
